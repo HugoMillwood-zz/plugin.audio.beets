@@ -8,7 +8,6 @@ import urllib2
 import urllib
 import itertools, collections
 
-
 beets = xbmcaddon.Addon('plugin.audio.beets')
 addon_handle = int(sys.argv[1])
 xbmcplugin.setContent(addon_handle, 'audio')
