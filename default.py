@@ -18,19 +18,21 @@ def consume(iterator, n):
 ip_address = "192.168.1.2"
 port = "8337"
 
-data = json.load(urllib2.urlopen('http://'+ip_address+':'+port+'/album/'))
+data = json.load(urllib2.urlopen('http://'+ip_address+':'+port+'/artist/'))
 #print(data)
-result = data.get('albums')
+result = data.get('artist_names')
 print("BEGIN")
 if (result != None):
 	iterator = range(1, len(result)).__iter__()
 	previousArtist = ""
 	for number in iterator:
-		artist = result[number].get('albumartist').encode("UTF-8") #THIS IS HILAAAAR
-		print("iterates")
+		artist = result[number].encode("UTF-8") #THIS IS HILAAAAR
+		#artist = result[number].get().encode("UTF-8")
 		print(artist)
-		id = result[number].get('id')
-		url = 'http://'+ip_address+':'+str(port)+'/item/'+str(id)+'/file'
+		print("iterates")
+		#id = result[number].get('id')
+		#url = 'http://'+ip_address+':'+str(port)+'/item/'+str(id)+'/file'
+		url = "doubleyoudoubleyoudoubleyoudotwhatevermandotcom"
 		li = xbmcgui.ListItem(artist, iconImage='DefaultAudio.png')
 		li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 		if (artist != previousArtist):
