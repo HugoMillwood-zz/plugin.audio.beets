@@ -2,11 +2,11 @@
 <addon id="plugin.audio.beets"
        name="Beets"
        version="0.1"
-       provider-name="Hugo Millwood">
+       provider-name="Millwall">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
-  <extension point="xbmc.python.pluginsource" library="beets.py">
+  <extension point="xbmc.python.pluginsource" library="default.py">
         <provides>audio</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
