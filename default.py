@@ -39,7 +39,36 @@ def presentData(data):
 # TODO - API
 # - Get all songs by artist
 # - Get all albums
-# - Get all songs
+
+# TODO
+# - Return some sort of tuple with track ID so the API call can be generated
+# - Might want to return artist as well so songs with the same name can be distinguished from one another
+def getSearchSongs(query):
+	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/query/title:' + query))
+	result = apiRequest.get('results')
+	songs = [];
+	if (result != None):
+		iterator = range(0, len(result)).__iter__()
+		for number in iterator:
+			title = result[number].get('title').encode("UTF-8")
+			songs.append(title)
+			songs.sort()
+	return songs
+	
+# TODO
+# - Return some sort of tuple with track ID so the API call can be generated
+# Who would use this?
+def getAllSongs():
+	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/'))
+	result = apiRequest.get('items')
+	songs = [];
+	if (result != None):
+		iterator = range(0, len(result)).__iter__()
+		for number in iterator:
+			title = result[number].get('title').encode("UTF-8")
+			songs.append(title)
+			songs.sort()
+	return songs
 
 # TODO
 # - Sort after track id
@@ -86,10 +115,14 @@ def getArtists():
 	return artists
 
 # MAIN
+searchList = getSearchSongs("light")
+songList = getAllSongs()
 artistList = getArtists()
 artistAlbumList = getArtistAlbums("Blackalicious")
 albumSongs = getAlbumSongs(2)
 
+#presentData(searchList)
+#presentData(songList)
 #presentData(artistAlbumList)
 #presentData(artistList)
-presentData(albumSongs)
+#presentData(albumSongs)
