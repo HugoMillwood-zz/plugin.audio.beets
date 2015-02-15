@@ -38,6 +38,25 @@ args = urlparse.parse_qs(sys.argv[2][1:])
 
 print(args)
 
+# META DATA
+
+def getMetaDataListItem(song):
+	metaDataDict = {'title': song['title']}
+	if (song['artist'] != None):
+		metaDataDict['artist'] = song['artist']
+	if (song['album'] != None):
+		metaDataDict['album'] = song['album']
+	if (song['genre'] != None):
+		metaDataDict['genre'] = song['genre']
+	if (song['year'] != None):
+		metaDataDict['year'] = song['year']
+	if (song['track'] != None):
+		metaDataDict['tracknumber'] = song['track']
+	print(metaDataDict)
+	li = xbmcgui.ListItem(metaDataDict['title'], iconImage='DefaultAudio.png')
+	#li.setInfo(type='Music', infoLabels = metaDataDict)
+	return li
+
 # DIRECTORY POPULATION
 
 def presentData(data):
@@ -54,8 +73,11 @@ def presentData(data):
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == SONGS):
-		for element in data[1]:
-			li = xbmcgui.ListItem(element, iconImage='DefaultAudio.png')
+		for element in data[1][2][2]:
+			label = element['title']
+			if (element['artist'] != None):
+				label = label + ' - ' + element['artist']
+			li = xbmcgui.ListItem(label, iconImage='DefaultAudio.png')
 			url = "plugin://"
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
@@ -70,10 +92,11 @@ def presentData(data):
 		#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 		xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == ALBUM_SONGS):
-		for element in data[1]:
-			li = xbmcgui.ListItem(element[0], iconImage='DefaultAudio.png')
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(element[1]) + '/file'
-			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
+		for element in data[1][2][2]:
+			#li = xbmcgui.ListItem(element['title'].encode('UTF-8'), iconImage='DefaultAudio.png')
+			li = getMetaDataListItem(element)
+			url = 'http://' + ip_address + ':' + port + '/item/' + str(element['id']) + '/file'
+			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_SONGS):
 		for element in data[1]:
@@ -103,10 +126,7 @@ def getSearchSongs(query):
 			songs.append(title)
 			songs.sort()
 	return songs
-	
-# TODO
-# - Return some sort of tuple with track ID so the API call can be generated
-# Who would use this?
+
 def getAllSongs():
 	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/'))
 	result = apiRequest.get('items')
@@ -116,9 +136,9 @@ def getAllSongs():
 		for number in iterator:
 			title = result[number].get('title').encode("UTF-8")
 			song_id = result[number].get('id')
-			songs.append([title, song_id])
+			songs.append([title, song_id, result])
 			songs.sort()
-	return songs
+	return SONGS, songs
 
 # TODO
 # - Sort after track id
@@ -131,7 +151,7 @@ def getAlbumSongs(albumID):
 		for number in iterator:
 			title = result[number].get('title').encode("UTF-8")
 			song_id = result[number].get('id')
-			songs.append([title, song_id])
+			songs.append([title, song_id, result])
 	return ALBUM_SONGS, songs
 
 def getArtistAlbums(artist):
@@ -196,11 +216,13 @@ if (args.get('view', None) == None):
 	url = "plugin://" + plugin + '?view=' + str(ALBUMS)
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	li = xbmcgui.ListItem('Songs', iconImage='DefaultAudio.png')
-	url = "plugin://" + plugin
+	url = "plugin://" + plugin + '?view=' + str(SONGS)
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
+	'''
 	li = xbmcgui.ListItem('Search...', iconImage='DefaultAudio.png')
 	url = "plugin://" + plugin
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
+	'''
 	xbmcplugin.endOfDirectory(addon_handle)
 elif (int(args.get('view', None)[0]) == ARTISTS):
 	presentData(getArtists())
@@ -212,16 +234,12 @@ elif (int(args.get('view', None)[0]) == ALBUM_SONGS):
 	presentData(getAlbumSongs(str(args.get('album_id', None)[0])))
 elif (int(args.get('view', None)[0]) == ARTIST_SONGS):
 	presentData(getArtistSongs(str(args.get('artist', None)[0])))
+elif (int(args.get('view', None)[0]) == SONGS):
+	presentData(getAllSongs())
 else:
 	print('DEBUG: Whatever happened to view? Get your args straight.')
 
 #searchList = getSearchSongs("light")
 #songList = getAllSongs()
-#artistList = getArtists()
-#artistAlbumList = getArtistAlbums("Blackalicious")
-#albumSongs = getAlbumSongs(2)
 #presentData(searchList)
 #presentData(songList)
-#presentData(artistAlbumList)
-#presentData(artistList)
-#presentData(albumSongs)
