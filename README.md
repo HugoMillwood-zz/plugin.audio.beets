@@ -1,7 +1,7 @@
 # plugin.audio.beets
 *less broken edition*
 
-An XBMC plugin for streaming audio from a beets web server.
+A Kodi plugin for streaming audio from a beets web server.
 
 [Hugo](https://github.com/HugoMillwood) wanted a plugin but his was too broken so I forked his repo and made a less broken one. It's still pretty broken.
 
