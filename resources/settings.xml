@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Server Settings">
+        <setting label="IP Address" type="text" id="ip" default=""/>
+        <setting label="Port" type="text" id="port" default=""/>
+    </category>
+</settings>
