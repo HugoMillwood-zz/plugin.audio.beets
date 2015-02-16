@@ -2,6 +2,6 @@
 <settings>
     <category label="Server Settings">
         <setting label="IP Address" type="text" id="ip" default=""/>
-        <setting label="Port" type="text" id="port" default=""/>
+        <setting label="Port" type="text" id="port" default="8337"/>
     </category>
 </settings>
