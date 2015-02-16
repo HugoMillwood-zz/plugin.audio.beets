@@ -17,11 +17,9 @@ Now install the add-on in Kodi. For now you have to install it from the .zip arc
 
 ###**_Important!_**
 
-We haven't been able to get things working with XBMC's PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin will at the moment not work without switching the default audio player to DVDPlayer. This is easy to do, just add the following as a setting in your ``<userdata>/advancedsettings.xml``:
+We haven't been able to get things working with Kodi's PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin will at the moment not work without switching the default audio player to DVDPlayer. This is easy to do, just add the following as a setting in the audio tag of your ``<userdata>/advancedsettings.xml``:
 
-	<audio>
 	  <defaultplayer>dvdplayer</defaultplayer>
-	</audio>
 
 If you don't have a ``advancedsettings.xml`` you can create one containing the following:
 
@@ -31,7 +29,7 @@ If you don't have a ``advancedsettings.xml`` you can create one containing the f
 		</audio>
 	</advancedsettings>
 	
-It will set the default audio player to DVDPlayer and allow you to stream FLAC (among other supported formats) with metadata.
+This will set the default audio player to DVDPlayer and allow you to stream FLAC (among other supported formats) with metadata.
 
 The userdata directory is located in different places depending on your platform. The most common places:
 
