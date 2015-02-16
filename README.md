@@ -21,7 +21,15 @@ Due to a bug in PAPlayer (the default audio player in Kodi) regarding metadata w
 	  <defaultplayer>dvdplayer</defaultplayer>
 	</audio>
 
-If you don't have a ``advancedsettings.xml`` you can use the one provided in this repository.
+If you don't have a ``advancedsettings.xml`` you can create one containing the following:
+
+	<advancedsettings>
+    		<audio>
+			<defaultplayer>dvdplayer</defaultplayer>
+		</audio>
+	</advancedsettings>
+	
+It will set the default audio player to DVDPlayer and allow you to stream FLAC (among other supported formats) with metadata.
 
 The userdata directory is located in different places depending on your platform. The most common places:
 
