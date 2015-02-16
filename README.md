@@ -24,8 +24,8 @@ Due to a bug in PAPlayer (the default audio player in Kodi) regarding metadata w
 If you don't have a ``advancedsettings.xml`` you can create one containing the following:
 
 	<advancedsettings>
-    		<audio>
-			<defaultplayer>dvdplayer</defaultplayer>
+    	<audio>
+	  		<defaultplayer>dvdplayer</defaultplayer>
 		</audio>
 	</advancedsettings>
 	
