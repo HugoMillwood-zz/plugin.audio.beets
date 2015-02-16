@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="Server Settings">
-        <setting label="IP Address" type="text" id="ip" default=""/>
+        <setting label="IP Address" type="ipaddress" id="ip" default=""/>
         <setting label="Port" type="text" id="port" default="8337"/>
     </category>
+	<category label="Log Settings">
+		<setting label="Debug" type="bool" id="debug" default="false"/>
+	</category>
 </settings>

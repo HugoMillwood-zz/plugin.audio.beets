@@ -12,6 +12,7 @@ import xbmcaddon
 # ADDON DATA
 
 plugin = 'plugin.audio.beets'
+version = '0.1.0'
 beets = xbmcaddon.Addon(plugin)
 addon_handle = int(sys.argv[1])
 xbmcplugin.setContent(addon_handle, 'audio')
@@ -20,6 +21,7 @@ xbmcplugin.setContent(addon_handle, 'audio')
 
 ip_address = beets.getSetting('ip')
 port = beets.getSetting('port')
+debug = beets.getSetting('debug')
 
 # PRESENTATION CONSTANTS
 
@@ -36,7 +38,9 @@ args = urlparse.parse_qs(sys.argv[2][1:])
 
 # DEBUG
 
-print(args)
+def printdbg(message):
+	if (debug):
+		print("Add-on " + plugin + "." + version + ': ' + str(message))
 
 # META DATA
 
@@ -77,12 +81,14 @@ def presentData(data):
 			url = "plugin://" + plugin + "?view=" + str(ARTIST_ALBUMS) + "&artist=" + urllib.pathname2url(element)
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
+	# Should sort alphabetically
 	elif (data[0] == ALBUMS):
 		for element in data[1]:
 			li = xbmcgui.ListItem(element[0], iconImage='DefaultAudio.png')
 			url = "plugin://" + plugin + "?view=" + str(ALBUM_SONGS) + "&album_id=" + str(element[1])
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
+	# Should sort alphabetically
 	elif (data[0] == SONGS):
 		for element in data[1][0][2]:
 			label = element['title']
@@ -92,6 +98,7 @@ def presentData(data):
 			url = "plugin://"
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
+	# Should sort by release date with newest on top
 	elif (data[0] == ARTIST_ALBUMS):
 		for element in data[1]:
 			li = xbmcgui.ListItem(element[0], iconImage='DefaultAudio.png')
@@ -150,8 +157,6 @@ def getAllSongs():
 			songs.sort()
 	return SONGS, songs
 
-# TODO
-# - Sort after track number
 def getAlbumSongs(albumID):
 	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/query/album_id:' + str(albumID)))
 	result = apiRequest.get('results')
@@ -162,7 +167,6 @@ def getAlbumSongs(albumID):
 			title = result[number].get('title').encode("UTF-8")
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
-			print(result)
 	return ALBUM_SONGS, songs
 
 def getArtistAlbums(artist):
@@ -190,7 +194,6 @@ def getArtistSongs(artist):
 			title = result[number].get('title').encode("UTF-8")
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
-			print(result)
 	return ARTIST_SONGS, songs
 	
 def getAlbums():
@@ -249,9 +252,4 @@ elif (int(args.get('view', None)[0]) == ARTIST_SONGS):
 elif (int(args.get('view', None)[0]) == SONGS):
 	presentData(getAllSongs())
 else:
-	print('DEBUG: Whatever happened to view? Get your args straight.')
-
-#searchList = getSearchSongs("light")
-#songList = getAllSongs()
-#presentData(searchList)
-#presentData(songList)
+	printdbg('Whatever happened to view? Get your args straight.')
