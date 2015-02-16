@@ -12,8 +12,8 @@ import xbmcaddon
 # ADDON DATA
 
 plugin = 'plugin.audio.beets'
-version = '0.1.0'
 beets = xbmcaddon.Addon(plugin)
+version = beets.getAddonInfo('version')
 addon_handle = int(sys.argv[1])
 xbmcplugin.setContent(addon_handle, 'audio')
 
