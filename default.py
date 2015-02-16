@@ -26,8 +26,8 @@ port = beets.getSetting('port')
 ARTISTS 		= 0		# All artists
 ALBUMS 			= 1		# All albums
 SONGS 			= 2		# All songs
-ARTIST_ALBUMS 	= 3		# All albums by an artist
-ARTIST_SONGS	= 4		# All songs by an artist
+ARTIST_ALBUMS 		= 3		# All albums by an artist
+ARTIST_SONGS		= 4		# All songs by an artist
 ALBUM_SONGS		= 5		# All song on an album
 
 # SESSION
@@ -76,7 +76,7 @@ def presentData(data):
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == SONGS):
-		for element in data[1][2][2]:
+		for element in data[1][0][2]:
 			label = element['title']
 			if (element['artist'] != None):
 				label = label + ' - ' + element['artist']
@@ -95,7 +95,7 @@ def presentData(data):
 		#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 		xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == ALBUM_SONGS):
-		for element in data[1][2][2]:
+		for element in data[1][0][2]:
 			#li = xbmcgui.ListItem(element['title'].encode('UTF-8'), iconImage='DefaultAudio.png')
 			li = getMetaDataListItem(element)
 			url = 'http://' + ip_address + ':' + port + '/item/' + str(element['id']) + '/file'
