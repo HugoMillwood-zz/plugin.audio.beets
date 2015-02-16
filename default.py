@@ -11,6 +11,7 @@ import xbmcplugin
 import xbmcaddon
 
 # ADDON DATA
+
 plugin = 'plugin.audio.beets'
 beets = xbmcaddon.Addon(plugin)
 addon_handle = int(sys.argv[1])
@@ -26,8 +27,8 @@ port = beets.getSetting('port')
 ARTISTS 		= 0		# All artists
 ALBUMS 			= 1		# All albums
 SONGS 			= 2		# All songs
-ARTIST_ALBUMS 		= 3		# All albums by an artist
-ARTIST_SONGS		= 4		# All songs by an artist
+ARTIST_ALBUMS 	= 3		# All albums by an artist
+ARTIST_SONGS	= 4		# All songs by an artist
 ALBUM_SONGS		= 5		# All song on an album
 
 # SESSION
@@ -39,6 +40,11 @@ args = urlparse.parse_qs(sys.argv[2][1:])
 print(args)
 
 # META DATA
+
+def trackNumberComparator():
+	def compare_two_dicts(x, y):
+		return cmp(x['track'], y['track'])
+	return compare_two_dicts
 
 def getMetaDataListItem(song):
 	metaDataDict = {'title': song['title']}
@@ -93,10 +99,11 @@ def presentData(data):
 		#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 		xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == ALBUM_SONGS):
-		for element in data[1][0][2]:
-			#li = xbmcgui.ListItem(element['title'].encode('UTF-8'), iconImage='DefaultAudio.png')
-			li = getMetaDataListItem(element)
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(element['id']) + '/file'
+		songs = data[1][0][2]
+		songs.sort(trackNumberComparator())
+		for song in songs:
+			li = getMetaDataListItem(song)
+			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_SONGS):
