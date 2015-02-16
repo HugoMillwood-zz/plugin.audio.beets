@@ -1,7 +1,6 @@
 import collections
 import itertools
 import json
-import operator #itemgetter for advanced nestled sorting
 import sys
 import urllib
 import urllib2
@@ -44,6 +43,11 @@ print(args)
 def trackNumberComparator():
 	def compare_two_dicts(x, y):
 		return cmp(x['track'], y['track'])
+	return compare_two_dicts
+	
+def trackTitleComparator():
+	def compare_two_dicts(x, y):
+		return cmp(x['title'], y['title'])
 	return compare_two_dicts
 
 def getMetaDataListItem(song):
@@ -107,11 +111,12 @@ def presentData(data):
 			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_SONGS):
-		for element in data[1][0][2]:
-			#li = xbmcgui.ListItem(element[0], iconImage='DefaultAudio.png')
-			li = getMetaDataListItem(element)
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(element['id']) + '/file'
-			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
+		songs = data[1][0][2]
+		songs.sort(trackTitleComparator())
+		for song in songs:
+			li = getMetaDataListItem(song)
+			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	xbmcplugin.endOfDirectory(addon_handle)
 
