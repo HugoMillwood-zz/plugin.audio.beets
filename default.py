@@ -54,8 +54,6 @@ def getMetaDataListItem(song):
 		metaDataDict['tracknumber'] = int(song['track'])
         if (song['length'] != None):
 	        metaDataDict['duration'] = int(song['length'])
-
-	print(metaDataDict)
 	li = xbmcgui.ListItem(metaDataDict['title'], iconImage='DefaultAudio.png')
 	li.setInfo(type='music', infoLabels = metaDataDict)
 	return li
@@ -102,9 +100,10 @@ def presentData(data):
 			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_SONGS):
-		for element in data[1]:
-			li = xbmcgui.ListItem(element[0], iconImage='DefaultAudio.png')
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(element[1]) + '/file'
+		for element in data[1][0][2]:
+			#li = xbmcgui.ListItem(element[0], iconImage='DefaultAudio.png')
+			li = getMetaDataListItem(element)
+			url = 'http://' + ip_address + ':' + port + '/item/' + str(element['id']) + '/file'
 			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	xbmcplugin.endOfDirectory(addon_handle)
@@ -151,6 +150,7 @@ def getAlbumSongs(albumID):
 			title = result[number].get('title').encode("UTF-8")
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
+			print(result)
 	return ALBUM_SONGS, songs
 
 def getArtistAlbums(artist):
@@ -177,7 +177,8 @@ def getArtistSongs(artist):
 		for number in iterator:
 			title = result[number].get('title').encode("UTF-8")
 			song_id = result[number].get('id')
-			songs.append([title, song_id])
+			songs.append([title, song_id, result])
+			print(result)
 	return ARTIST_SONGS, songs
 	
 def getAlbums():
