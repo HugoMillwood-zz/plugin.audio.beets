@@ -43,18 +43,20 @@ print(args)
 def getMetaDataListItem(song):
 	metaDataDict = {'title': song['title']}
 	if (song['artist'] != None):
-		metaDataDict['artist'] = song['artist']
+		metaDataDict['artist'] = str(song['artist'].encode('UTF-8'))
 	if (song['album'] != None):
-		metaDataDict['album'] = song['album']
+		metaDataDict['album'] = str(song['album'].encode('UTF-8'))
 	if (song['genre'] != None):
-		metaDataDict['genre'] = song['genre']
+		metaDataDict['genre'] = str(song['genre'].encode('UTF-8'))
 	if (song['year'] != None):
-		metaDataDict['year'] = song['year']
+		metaDataDict['year'] = int(song['year'])
 	if (song['track'] != None):
-		metaDataDict['tracknumber'] = song['track']
+		metaDataDict['tracknumber'] = int(song['track'])
 	print(metaDataDict)
 	li = xbmcgui.ListItem(metaDataDict['title'], iconImage='DefaultAudio.png')
-	#li.setInfo(type='Music', infoLabels = metaDataDict)
+	#li.addStreamInfo('music', {'codec': 'flac'})
+	#li.setInfo(type='music', infoLabels = metaDataDict)
+	#li.setInfo(type='music', infoLabels = { 'title': 'Titledorf', 'artist': 'Radsinga' })
 	return li
 
 # DIRECTORY POPULATION
@@ -108,10 +110,6 @@ def presentData(data):
 
 # BEETS WEB API CALLS
 
-# TODO - API
-# - Get all songs by artist
-# - Get all albums
-
 # TODO
 # - Return some sort of tuple with track ID so the API call can be generated
 # - Might want to return artist as well so songs with the same name can be distinguished from one another
@@ -141,7 +139,7 @@ def getAllSongs():
 	return SONGS, songs
 
 # TODO
-# - Sort after track id
+# - Sort after track number
 def getAlbumSongs(albumID):
 	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/query/album_id:' + str(albumID)))
 	result = apiRequest.get('results')
