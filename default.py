@@ -54,9 +54,7 @@ def getMetaDataListItem(song):
 		metaDataDict['tracknumber'] = int(song['track'])
 	print(metaDataDict)
 	li = xbmcgui.ListItem(metaDataDict['title'], iconImage='DefaultAudio.png')
-	#li.addStreamInfo('music', {'codec': 'flac'})
-	#li.setInfo(type='music', infoLabels = metaDataDict)
-	#li.setInfo(type='music', infoLabels = { 'title': 'Titledorf', 'artist': 'Radsinga' })
+	li.setInfo(type='music', infoLabels = metaDataDict)
 	return li
 
 # DIRECTORY POPULATION
