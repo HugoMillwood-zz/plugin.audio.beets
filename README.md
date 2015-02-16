@@ -13,6 +13,25 @@ Now install the add-on in Kodi. For now you have to install it from the .zip arc
 
 *We don't even provide a .zip archive yet. The development is at a very early stage but if you're eager to try it out you can install it manually.*
 
+###**_Important!_**
+
+Due to a bug in PAPlayer (the default audio player in Kodi) regarding metadata when streaming FLAC this plugin will not work without switching the default audio player to the more robust DVDPlayer. This is easy to do, just add the following as a setting in your ``<userdata directory>/advancedsettings.xml``:
+
+	<audio>
+	  <defaultplayer>dvdplayer</defaultplayer>
+	</audio>
+
+If you don't have a ``advancedsettings.xml`` you can use the one provided in this repository.
+
+The userdata directory is located in different places depending on your platform. The most common places:
+
+- Linux: ``~/.kodi/userdata/``
+- OS X: ``/Users/<your_user_name>/Library/Application Support/kodi/userdata/``
+- Windows: ``%APPDATA%\kodi\userdata``
+- OpenELEC: ``/storage/.kodi/userdata/`` 
+
+More information regarding [userdata](http://kodi.wiki/view/Userdata) and [advancedsettings.xml](http://kodi.wiki/view/Advancedsettings.xml).
+
 # Authors
 [Hugo Millwood](https://github.com/HugoMillwood) and [Pär Strindevall](https://github.com/parski). Feel free to fork!
 
