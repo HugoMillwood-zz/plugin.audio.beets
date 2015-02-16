@@ -15,7 +15,7 @@ Now install the add-on in Kodi. For now you have to install it from the .zip arc
 
 ###**_Important!_**
 
-Due to a bug in PAPlayer (the default audio player in Kodi) regarding metadata when streaming FLAC this plugin will not work without switching the default audio player to the more robust DVDPlayer. This is easy to do, just add the following as a setting in your ``<userdata directory>/advancedsettings.xml``:
+Due to a bug in PAPlayer (the default audio player in Kodi) regarding metadata when streaming FLAC this plugin will not work without switching the default audio player to the more robust DVDPlayer. This is easy to do, just add the following as a setting in your ``<userdata>/advancedsettings.xml``:
 
 	<audio>
 	  <defaultplayer>dvdplayer</defaultplayer>
