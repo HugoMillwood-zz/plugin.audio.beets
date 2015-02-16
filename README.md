@@ -5,6 +5,8 @@ A joint effort between [Hugo](https://github.com/HugoMillwood) and [Pär](https:
 
 ###Known bugs:
 
+**FLAC only seems to work with Linux at the moment** - OS X and OpenELEC seem to have codec issues with FLAC and metadata. Very strange. See: http://forum.kodi.tv/showthread.php?tid=218576
+
 **Sort of stupid sorting** - This plugin doesn't even alphabet. I'll sort it out later *HAR HAR HAR*
 
 **Search doesn't work** - It's not implemented yet.
