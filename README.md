@@ -1,4 +1,6 @@
 # plugin.audio.beets
+<img src="https://raw.githubusercontent.com/HugoMillwood/plugin.audio.beets/master/icon.png"  width="192" height="250" alt="Such a nifty logo.">
+
 A Kodi add-on for streaming music from a [beets](https://github.com/sampsyo/beets) library using the beets web plugin.
 
 #Installation
