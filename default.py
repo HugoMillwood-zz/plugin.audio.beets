@@ -52,6 +52,9 @@ def getMetaDataListItem(song):
 		metaDataDict['year'] = int(song['year'])
 	if (song['track'] != None):
 		metaDataDict['tracknumber'] = int(song['track'])
+        if (song['length'] != None):
+	        metaDataDict['duration'] = int(song['length'])
+
 	print(metaDataDict)
 	li = xbmcgui.ListItem(metaDataDict['title'], iconImage='DefaultAudio.png')
 	li.setInfo(type='music', infoLabels = metaDataDict)
