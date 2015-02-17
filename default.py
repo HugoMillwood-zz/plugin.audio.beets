@@ -29,9 +29,9 @@ debug = beets.getSetting('debug')
 ARTISTS 		= 0		# All artists
 ALBUMS 			= 1		# All albums
 SONGS 			= 2		# All songs
-ARTIST_ALBUMS 	= 3		# All albums by an artist
-ARTIST_SONGS	= 4		# All songs by an artist
-ALBUM_SONGS		= 5		# All song on an album
+ARTIST_ALBUMS 		= 3		# All albums by an artist
+ARTIST_SONGS		= 4		# All songs by an artist
+ALBUM_SONGS		= 5		# All songs on an album
 
 # SESSION
 
@@ -71,8 +71,13 @@ def getMetaDataListItem(song):
 	        metaDataDict['duration'] = int(song['length'])
 	albumID = str(song['album_id'])
 	albumArt = getAlbumArt(albumID)
-	li = xbmcgui.ListItem(metaDataDict['title'], iconImage=albumArt)
+	li = xbmcgui.ListItem(metaDataDict['title'], iconImage=albumArt, thumbnailImage=albumArt)
 	li.setInfo(type='music', infoLabels = metaDataDict)
+	return li
+	
+def getMetaDataListItemWithArtist(song):
+	li = getMetaDataListItem(song)
+	li.setLabel(song['title'] + ' - ' + song['artist'])
 	return li
 
 def getAlbumArt(album):
@@ -103,15 +108,12 @@ def presentData(data):
 			li = xbmcgui.ListItem(element[0], iconImage=albumArt)
 			url = "plugin://" + plugin + "?view=" + str(ALBUM_SONGS) + "&album_id=" + str(albumID)
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
-	# Should sort alphabetically
 	elif (data[0] == SONGS):
-		for element in data[1][0][2]:
-			label = element['title']
-			if (element['artist'] != None):
-				label = label + ' - ' + element['artist']
-			li = xbmcgui.ListItem(label, iconImage='DefaultAudio.png')
-			url = "plugin://"
-			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
+		songs = data[1][0][2]
+		songs.sort(trackTitleComparator())
+		for song in songs:
+			li = getMetaDataListItemWithArtist(song)
+			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	# Should sort by release date with newest on top
 	elif (data[0] == ARTIST_ALBUMS):
