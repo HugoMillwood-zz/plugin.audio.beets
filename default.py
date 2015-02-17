@@ -80,12 +80,24 @@ def getMetaDataListItemWithArtist(song):
 	li.setLabel(song['title'] + ' - ' + song['artist'])
 	return li
 
+confirmedMissing = confirmedExist = set()
+
 def getAlbumArt(album):
 	albumArtURI = '/album/' + str(album) + '/art'
-	probe = httplib.HTTPConnection(ip_address, port)
-	probe.request('GET', albumArtURI)
-	response = probe.getresponse()
-	if (response.status == 200):
+	if (str(album) not in confirmedMissing | confirmedExist):
+		printdbg('Fetching album art for album ' + str(album) + '.')
+		probe = httplib.HTTPConnection(ip_address, port)
+		probe.request('GET', albumArtURI)
+		response = probe.getresponse()
+		if (response.status == 200):
+			printdbg('Caching album art for album ' + str(album) + '.')
+			confirmedExist.add(str(album))
+			albumArt = 'http://' + ip_address + ':' + port + albumArtURI
+		else:
+			printdbg('Album art for album ' + str(album) + ' is missing.')
+			confirmedMissing.add(str(album))
+			albumArt = 'DefaultAudio.png'
+	elif (str(album) in confirmedExist):
 		albumArt = 'http://' + ip_address + ':' + port + albumArtURI
 	else:
 		albumArt = 'DefaultAudio.png'
