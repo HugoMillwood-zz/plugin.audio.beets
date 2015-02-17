@@ -114,7 +114,6 @@ def presentData(data):
 			li = getMetaDataListItemWithArtist(song)
 			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
-	# Should sort by release date with newest on top
 	elif (data[0] == ARTIST_ALBUMS):
 		data[1].sort(key=lambda x: int(x[2]))
 		data[1].reverse()
