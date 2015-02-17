@@ -1,4 +1,5 @@
 import collections
+import httplib
 import itertools
 import json
 import sys
@@ -75,10 +76,13 @@ def getMetaDataListItem(song):
 	return li
 
 def getAlbumArt(album):
-	url = 'http://' + ip_address +':' + port + '/album/' + str(album) + '/art'
-	response = 200; # try to HTTP GET the album art
-	if (response == 200):
-		albumArt = url
+	albumArtURI = '/album/' + str(album) + '/art'
+	probe = httplib.HTTPConnection(ip_address, port)
+	probe.request('GET', albumArtURI)
+	response = probe.getresponse()
+	print(response.status)
+	if (response.status == 200):
+		albumArt = 'http://' + ip_address + ':' + port + albumArtURI
 	else:
 		albumArt = 'DefaultAudio.png'
 	return albumArt
