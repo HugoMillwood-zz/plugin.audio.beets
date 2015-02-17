@@ -41,7 +41,7 @@ args = urlparse.parse_qs(sys.argv[2][1:])
 
 def printdbg(message):
 	if (debug):
-		print("Add-on " + plugin + "." + version + ': ' + str(message))
+		print('Add-on ' + plugin + '.' + version + ': ' + str(message))
 
 # META DATA
 
@@ -85,7 +85,6 @@ def getAlbumArt(album):
 	probe = httplib.HTTPConnection(ip_address, port)
 	probe.request('GET', albumArtURI)
 	response = probe.getresponse()
-	print(response.status)
 	if (response.status == 200):
 		albumArt = 'http://' + ip_address + ':' + port + albumArtURI
 	else:
@@ -98,15 +97,16 @@ def presentData(data):
 	if (data[0] == ARTISTS):
 		for element in data[1]:
 			li = xbmcgui.ListItem(element, iconImage='DefaultAudio.png')
-			url = "plugin://" + plugin + "?view=" + str(ARTIST_ALBUMS) + "&artist=" + urllib.pathname2url(element)
+			url = 'plugin://' + plugin + '?view=' + str(ARTIST_ALBUMS) + '&artist=' + urllib.pathname2url(element)
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
-	# Should sort alphabetically
 	elif (data[0] == ALBUMS):
+		data[1].sort(key=lambda x: x[0].lower())
 		for element in data[1]:
 			albumID = element[1]
+			print(element)
 			albumArt = getAlbumArt(albumID)
 			li = xbmcgui.ListItem(element[0], iconImage=albumArt)
-			url = "plugin://" + plugin + "?view=" + str(ALBUM_SONGS) + "&album_id=" + str(albumID)
+			url = 'plugin://' + plugin + '?view=' + str(ALBUM_SONGS) + '&album_id=' + str(albumID)
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == SONGS):
 		songs = data[1][0][2]
@@ -121,10 +121,10 @@ def presentData(data):
 			albumID = element[1]
 			albumArt = getAlbumArt(albumID)
 			li = xbmcgui.ListItem(element[0], iconImage=albumArt)
-			url = "plugin://" + plugin + "?view=" + str(ALBUM_SONGS) + "&album_id=" + str(albumID)
+			url = 'plugin://' + plugin + '?view=' + str(ALBUM_SONGS) + '&album_id=' + str(albumID)
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 		li = xbmcgui.ListItem('All songs by ' + args.get('artist', None)[0], iconImage='DefaultAudio.png')
-		url = "plugin://" + plugin + "?view=" + str(ARTIST_SONGS) + '&artist=' + args.get('artist', None)[0]
+		url = 'plugin://' + plugin + '?view=' + str(ARTIST_SONGS) + '&artist=' + args.get('artist', None)[0]
 		xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == ALBUM_SONGS):
 		songs = data[1][0][2]
@@ -155,7 +155,7 @@ def getSearchSongs(query):
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			title = result[number].get('title').encode("UTF-8")
+			title = result[number].get('title').encode('UTF-8')
 			songs.append(title)
 			songs.sort()
 	return songs
@@ -167,7 +167,7 @@ def getAllSongs():
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			title = result[number].get('title').encode("UTF-8")
+			title = result[number].get('title').encode('UTF-8')
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
 			songs.sort()
@@ -180,7 +180,7 @@ def getAlbumSongs(albumID):
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			title = result[number].get('title').encode("UTF-8")
+			title = result[number].get('title').encode('UTF-8')
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
 	return ALBUM_SONGS, songs
@@ -192,9 +192,9 @@ def getArtistAlbums(artist):
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			albumArtist = result[number].get('albumartist').encode("UTF-8")
+			albumArtist = result[number].get('albumartist').encode('UTF-8')
 			if (albumArtist == artist):
-				album = result[number].get('album').encode("UTF-8")
+				album = result[number].get('album').encode('UTF-8')
 				album_id = result[number].get('id')
 				albums.append([album, album_id])
 	albums.sort()
@@ -207,7 +207,7 @@ def getArtistSongs(artist):
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			title = result[number].get('title').encode("UTF-8")
+			title = result[number].get('title').encode('UTF-8')
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
 	return ARTIST_SONGS, songs
@@ -219,7 +219,7 @@ def getAlbums():
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			album = result[number].get('album').encode("UTF-8")
+			album = result[number].get('album').encode('UTF-8')
 			album_id = result[number].get('id')
 			albums.append([album, album_id])
 	albums.sort()
@@ -232,7 +232,7 @@ def getArtists():
 	if (result != None):
 		iterator = range(0, len(result)).__iter__()
 		for number in iterator:
-			artist = result[number].encode("UTF-8")
+			artist = result[number].encode('UTF-8')
 			artists.append(artist)
 	artists.sort()
 	return ARTISTS, artists
@@ -241,17 +241,17 @@ def getArtists():
 
 if (args.get('view', None) == None):
 	li = xbmcgui.ListItem('Artists', iconImage='DefaultAudio.png')
-	url = "plugin://" + plugin + '?view=' + str(ARTISTS)
+	url = 'plugin://' + plugin + '?view=' + str(ARTISTS)
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	li = xbmcgui.ListItem('Albums', iconImage='DefaultAudio.png')
-	url = "plugin://" + plugin + '?view=' + str(ALBUMS)
+	url = 'plugin://' + plugin + '?view=' + str(ALBUMS)
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	li = xbmcgui.ListItem('Songs', iconImage='DefaultAudio.png')
-	url = "plugin://" + plugin + '?view=' + str(SONGS)
+	url = 'plugin://' + plugin + '?view=' + str(SONGS)
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	'''
 	li = xbmcgui.ListItem('Search...', iconImage='DefaultAudio.png')
-	url = "plugin://" + plugin
+	url = 'plugin://' + plugin
 	xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	'''
 	xbmcplugin.endOfDirectory(addon_handle)
