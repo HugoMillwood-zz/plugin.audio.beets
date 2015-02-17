@@ -2,7 +2,7 @@
 <addon id="plugin.audio.beets"
 	name="Beets"
 	version="0.1.0"
-       	provider-name="Millwood & Strindevall">
+       	provider-name="Millwood &amp; Strindevall">
 	<requires>
     		<import addon="xbmc.python" version="2.1.0"/>
   	</requires>
@@ -15,4 +15,3 @@
     		<description lang="en">This add-on for Kodi allows you to stream music from a server running Beets web plugin. Album art is supported if the Beets server is also running the fetchart plugin.</description>
   	</extension>
 </addon>
-
