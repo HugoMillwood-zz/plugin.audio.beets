@@ -103,7 +103,6 @@ def presentData(data):
 		data[1].sort(key=lambda x: x[0].lower())
 		for element in data[1]:
 			albumID = element[1]
-			print(element)
 			albumArt = getAlbumArt(albumID)
 			li = xbmcgui.ListItem(element[0], iconImage=albumArt)
 			url = 'plugin://' + plugin + '?view=' + str(ALBUM_SONGS) + '&album_id=' + str(albumID)
@@ -117,6 +116,8 @@ def presentData(data):
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	# Should sort by release date with newest on top
 	elif (data[0] == ARTIST_ALBUMS):
+		data[1].sort(key=lambda x: int(x[2]))
+		data[1].reverse()
 		for element in data[1]:
 			albumID = element[1]
 			albumArt = getAlbumArt(albumID)
@@ -196,7 +197,8 @@ def getArtistAlbums(artist):
 			if (albumArtist == artist):
 				album = result[number].get('album').encode('UTF-8')
 				album_id = result[number].get('id')
-				albums.append([album, album_id])
+				album_year = result[number].get('year')
+				albums.append([album, album_id, album_year])
 	albums.sort()
 	return ARTIST_ALBUMS, albums
 	
