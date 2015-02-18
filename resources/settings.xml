@@ -4,7 +4,7 @@
 		<setting label="Wizard" type="bool" id="wizard" default="true" visible="false"/>
         	<setting label="IP Address" type="ipaddress" id="ip" default=""/>
         	<setting label="Port" type="text" id="port" default="8337"/>
-			<setting label="TLS/SSL" type="bool" id="tls_ssl" default="false"/>
+		<setting label="TLS/SSL" type="bool" id="tls_ssl" default="false"/>
     	</category>
 	<category label="Log Settings">
 		<setting label="Debug" type="bool" id="debug" default="false"/>
