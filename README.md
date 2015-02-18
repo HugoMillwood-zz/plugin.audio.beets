@@ -34,7 +34,7 @@ The add-on directory is located in different places depending on your platform.
 | Windows  | ``%PROGRAMFILES(x86)%\XBMC\addons`` 			|
 | OpenELEC | ``/storage/.kodi/addons`` 					|
 
-To update the plugin you just have to ``git pull`` in the cloned directory.
+To update the add-on you just have to ``git pull`` in the cloned directory.
 
 Like so:
 
