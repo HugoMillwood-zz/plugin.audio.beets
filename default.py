@@ -22,7 +22,18 @@ xbmcplugin.setContent(addon_handle, 'audio')
 
 ip_address = beets.getSetting('ip')
 port = beets.getSetting('port')
-debug = beets.getSetting('debug')
+
+tls_ssl = False
+if (beets.getSetting('tls_ssl') == 'true'):
+	tls_ssl = True
+
+debug = False
+if (beets.getSetting('debug') == 'true'):
+	debug = True
+
+protocol = 'http://'
+if (tls_ssl):
+	protocol = 'https://'
 
 # PRESENTATION CONSTANTS
 
@@ -92,13 +103,13 @@ def getAlbumArt(album):
 		if (response.status == 200):
 			printdbg('Caching album art for album ' + str(album) + '.')
 			confirmedExist.add(str(album))
-			albumArt = 'http://' + ip_address + ':' + port + albumArtURI
+			albumArt = protocol + ip_address + ':' + port + albumArtURI
 		else:
 			printdbg('Album art for album ' + str(album) + ' is missing.')
 			confirmedMissing.add(str(album))
 			albumArt = 'DefaultAudio.png'
 	elif (str(album) in confirmedExist):
-		albumArt = 'http://' + ip_address + ':' + port + albumArtURI
+		albumArt = protocol + ip_address + ':' + port + albumArtURI
 	else:
 		albumArt = 'DefaultAudio.png'
 	return albumArt
@@ -124,7 +135,7 @@ def presentData(data):
 		songs.sort(trackTitleComparator())
 		for song in songs:
 			li = getMetaDataListItemWithArtist(song)
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_ALBUMS):
 		data[1].sort(key=lambda x: int(x[2]))
@@ -143,14 +154,14 @@ def presentData(data):
 		songs.sort(trackNumberComparator())
 		for song in songs:
 			li = getMetaDataListItem(song)
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_SONGS):
 		songs = data[1][0][2]
 		songs.sort(trackTitleComparator())
 		for song in songs:
 			li = getMetaDataListItem(song)
-			url = 'http://' + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	xbmcplugin.endOfDirectory(addon_handle)
@@ -161,7 +172,7 @@ def presentData(data):
 # - Return some sort of tuple with track ID so the API call can be generated
 # - Might want to return artist as well so songs with the same name can be distinguished from one another
 def getSearchSongs(query):
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/query/title:' + query))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/item/query/title:' + query))
 	result = apiRequest.get('results')
 	songs = [];
 	if (result != None):
@@ -173,7 +184,7 @@ def getSearchSongs(query):
 	return songs
 
 def getAllSongs():
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/'))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/item/'))
 	result = apiRequest.get('items')
 	songs = [];
 	if (result != None):
@@ -186,7 +197,7 @@ def getAllSongs():
 	return SONGS, songs
 
 def getAlbumSongs(albumID):
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/query/album_id:' + str(albumID)))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/item/query/album_id:' + str(albumID)))
 	result = apiRequest.get('results')
 	songs = [];
 	if (result != None):
@@ -198,7 +209,7 @@ def getAlbumSongs(albumID):
 	return ALBUM_SONGS, songs
 
 def getArtistAlbums(artist):
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/album/query/albumartist:' + urllib.pathname2url(artist)))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/album/query/albumartist:' + urllib.pathname2url(artist)))
 	result = apiRequest.get('results')
 	albums = [];
 	if (result != None):
@@ -214,7 +225,7 @@ def getArtistAlbums(artist):
 	return ARTIST_ALBUMS, albums
 	
 def getArtistSongs(artist):
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/item/query/artist:' + urllib.pathname2url(artist)))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/item/query/artist:' + urllib.pathname2url(artist)))
 	result = apiRequest.get('results')
 	songs = [];
 	if (result != None):
@@ -226,7 +237,7 @@ def getArtistSongs(artist):
 	return ARTIST_SONGS, songs
 	
 def getAlbums():
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/album/'))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/album/'))
 	result = apiRequest.get('albums')
 	albums = [];
 	if (result != None):
@@ -239,7 +250,7 @@ def getAlbums():
 	return ALBUMS, albums
 
 def getArtists():
-	apiRequest = json.load(urllib2.urlopen('http://' + ip_address + ':' + port + '/artist/'))
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/artist/'))
 	result = apiRequest.get('artist_names')
 	artists = [];
 	if (result != None):
@@ -251,6 +262,18 @@ def getArtists():
 	return ARTISTS, artists
 
 # NAVIGATION
+
+'''
+#if plugin just started, run these:
+# if connection to beets cannot be established
+#	show modal pointing out the absense of a connection
+#	debug print stuff
+# else
+	printdbg('Add-on started in debug mode.')
+	if (tls_ssl):
+		printdbg('TLS/SSL protocol enabled.')
+	printdbg('Arguments: ' + str(args))
+'''
 
 if (args.get('view', None) == None):
 	li = xbmcgui.ListItem('Artists', iconImage='DefaultAudio.png')
@@ -281,4 +304,4 @@ elif (int(args.get('view', None)[0]) == ARTIST_SONGS):
 elif (int(args.get('view', None)[0]) == SONGS):
 	presentData(getAllSongs())
 else:
-	printdbg('Whatever happened to view? Get your args straight.')
+	printdbg('Invalid view argument. Arguments: ' + str(args))
