@@ -1,23 +1,69 @@
 # plugin.audio.beets
 <img src="https://raw.githubusercontent.com/HugoMillwood/plugin.audio.beets/master/icon.png"  width="192" height="250" alt="Such a nifty logo.">
 
-A Kodi add-on for streaming music from a [beets](https://github.com/sampsyo/beets) library using the beets web plugin.
+A Kodi add-on for streaming music from a [Beets](https://github.com/sampsyo/beets) library using the Beets web plugin.
 
-#Installation
+##Installation
 
-The web plugin for beets needs to be running on the server you want to stream from. Make sure you have it installed and run:
+The easiest way to install this add-on at the moment is to ```git clone``` this repository into your add-on directory of your Kodi installation.
 
-	# beet web &
+Like so:
 
-This creates a web server session detached from your shell. Skip the ``&`` if you want the session to stay in your shell to see the API calls.
+```shell
+$ git clone https://github.com/HugoMillwood/plugin.audio.beets.git <addon directory>/plugin.audio.beets
+```
 
-Now install the add-on in Kodi. For now you have to install it from the .zip archive. Configure the server settings via Kodi as you need to specify the host address and port. The default port for beets web plugin is ``8337``.
+For example:
 
-*We don't even provide a .zip archive yet. The development is at a very early stage but if you're eager to try it out you can install it manually.*
+```shell
+$ git clone https://github.com/HugoMillwood/plugin.audio.beets.git /usr/share/kodi/addons/plugin.audio.beets
+```
+
+Or you can just ``cd`` into your add-on directory and run:
+
+```shell
+$ git clone https://github.com/HugoMillwood/plugin.audio.beets.git
+```
+
+The add-on directory is located in different places depending on your platform.
+
+| OS       | Path							|
+|----------|------------------------------------------------------------|
+| Linux    | ``/usr/share/kodi/addons`` 				|
+| OS X     | ``/Applications/Kodi.app/Contents/Resources/Kodi/addons`` 	|
+| Windows  | ``%PROGRAMFILES(x86)%\XBMC\addons`` 			|
+| OpenELEC | ``/storage/.kodi/addons`` 					|
+
+##Configuration
+
+There are two necessary settings for the add-on to function properly:
+
+| Setting    | Description							|
+|------------|------------------------------------------------------------------|
+| IP Address | The IP address of the host running Beets and the web plugin. 	|
+| Port       | The port of the Beets web plugin server.				|
+
+*Note that you only have to change the port if you're not using the default* ``8337`` *port.*
+
+Make sure you are [using](http://beets.readthedocs.org/en/latest/plugins/index.html#using-plugins) the [web plugin](http://beets.readthedocs.org/en/latest/plugins/web.html) on your server running Beets. If you want album art to be displayed in Kodi you must also use the [fetchart](http://beets.readthedocs.org/en/latest/plugins/fetchart.html) plugin.
+
+The web plugin for Beets needs to be running on the server you want to stream from.
+
+On your server:
+
+```shell
+$ beet web &
+```
+
+This creates a web server session detached from your shell. Skip the ``&`` if you want the session attached.
+
+Configure the add-on using the Kodi user interface:
+
+**System ➜ Settings ➜ Add-ons ➜ Enabled Add-ons ➜ Music Add-ons ➜ Beets ➜ Configure**
 
 ###**_Important!_**
 
-We haven't been able to get things working with Kodi's PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin will at the moment not work without switching the default audio player to DVDPlayer. This is easy to do, just add the following as a setting in the audio tag of your ``<userdata>/advancedsettings.xml``:
+We [haven't](http://forum.kodi.tv/showthread.php?tid=218576) been able to get things working with PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin will at the moment not work without switching the default audio player to DVDPlayer. This is easy to do. Just add the following as a setting in the audio tag of your ``<userdata>/advancedsettings.xml``:
 
 	  <defaultplayer>dvdplayer</defaultplayer>
 
@@ -31,17 +77,21 @@ If you don't have a ``advancedsettings.xml`` you can create one containing the f
 	
 This will set the default audio player to DVDPlayer and allow you to stream FLAC (among other supported formats) with metadata.
 
-The userdata directory is located in different places depending on your platform. The most common places:
+The userdata directory is located in different places depending on your platform.
 
-- Linux: ``~/.kodi/userdata/``
-- OS X: ``/Users/<your_user_name>/Library/Application Support/kodi/userdata/``
-- Windows: ``%APPDATA%\kodi\userdata``
-- OpenELEC: ``/storage/.kodi/userdata/`` 
+| OS       | Path								 	|
+|----------|----------------------------------------------------------------------------|
+| Linux    | ``~/.kodi/userdata/`` 						 	|
+| OS X     | ``/Users/<your_user_name>/Library/Application Support/kodi/userdata/`` 	|
+| Windows  | ``%APPDATA%\kodi\userdata`` 					 	|
+| OpenELEC | ``/storage/.kodi/userdata/`` 					 	|
 
 More information regarding [userdata](http://kodi.wiki/view/Userdata) and [advancedsettings.xml](http://kodi.wiki/view/Advancedsettings.xml).
 
-# Authors
-[Hugo Millwood](https://github.com/HugoMillwood) and [Pär Strindevall](https://github.com/parski). Feel free to fork!
+*Note that the directories listed in this README are bound to change. Check yourself before you wreck yourself.*
 
-#License
-plugin.audio.beets is distributed under the Simplified BSD license. See [LICENSE](https://github.com/HugoMillwood/plugin.audio.beets/blob/master/LICENSE) for more information.
+## Authors
+[Hugo Millwood](https://github.com/HugoMillwood) and [Pär Strindevall](https://github.com/parski).
+
+## License
+plugin.audio.beets is distributed under the Simplified BSD license. See [LICENSE](https://github.com/HugoMillwood/plugin.audio.beets/blob/master/LICENSE).
