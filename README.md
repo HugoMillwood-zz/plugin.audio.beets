@@ -34,6 +34,20 @@ The add-on directory is located in different places depending on your platform.
 | Windows  | ``%PROGRAMFILES(x86)%\XBMC\addons`` 			|
 | OpenELEC | ``/storage/.kodi/addons`` 					|
 
+To update the plugin you just have to ``git pull`` in the cloned directory.
+
+Like so:
+
+```shell
+$ git -C <addon directory>/plugin.audio.beets pull
+```
+
+Or you can just ``cd`` into your cloned directory and run:
+
+```shell
+$ git pull
+```
+
 ##Configuration
 
 There are two necessary settings for the add-on to function properly:
