@@ -17,6 +17,7 @@ beets = xbmcaddon.Addon(plugin)
 version = beets.getAddonInfo('version')
 addon_handle = int(sys.argv[1])
 xbmcplugin.setContent(addon_handle, 'audio')
+xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER)
 
 # SETTINGS
 
@@ -43,6 +44,7 @@ SONGS 			= 2		# All songs
 ARTIST_ALBUMS 		= 3		# All albums by an artist
 ARTIST_SONGS		= 4		# All songs by an artist
 ALBUM_SONGS		= 5		# All songs on an album
+PLAY_SONG     = 6   # Play the selected song
 
 # SESSION
 
@@ -135,7 +137,8 @@ def presentData(data):
 		songs.sort(trackTitleComparator())
 		for song in songs:
 			li = getMetaDataListItemWithArtist(song)
-			url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			url = 'plugin://' + plugin + '?view=' + str(PLAY_SONG) + '&song_id=' + str(song['id'])
+			#url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_ALBUMS):
 		data[1].sort(key=lambda x: int(x[2]))
@@ -154,15 +157,17 @@ def presentData(data):
 		songs.sort(trackNumberComparator())
 		for song in songs:
 			li = getMetaDataListItem(song)
-			url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			url = 'plugin://' + plugin + '?view=' + str(PLAY_SONG) + '&song_id=' + str(song['id'])
+			#url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	elif (data[0] == ARTIST_SONGS):
 		songs = data[1][0][2]
 		songs.sort(trackTitleComparator())
 		for song in songs:
 			li = getMetaDataListItem(song)
-			url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
-			li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
+			url = 'plugin://' + plugin + '?view=' + str(PLAY_SONG) + '&song_id=' + str(song['id'])
+			#url = protocol + ip_address + ':' + port + '/item/' + str(song['id']) + '/file'
+			#li.setProperty('fanart_image', beets.getAddonInfo('fanart'))
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li)
 	xbmcplugin.endOfDirectory(addon_handle)
 
@@ -182,6 +187,12 @@ def getSearchSongs(query):
 			songs.append(title)
 			songs.sort()
 	return songs
+
+def getSong(songID):
+	printdbg("URL: " + protocol + ip_address + ':' + port + '/item/' + songID)
+	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/item/' + songID))
+	result = apiRequest
+	return result
 
 def getAllSongs():
 	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/item/'))
@@ -207,6 +218,12 @@ def getAlbumSongs(albumID):
 			song_id = result[number].get('id')
 			songs.append([title, song_id, result])
 	return ALBUM_SONGS, songs
+
+def playSong(songID):
+	song = getSong(songID)
+	li = getMetaDataListItem(song)
+	url = protocol + ip_address + ':' + port + '/item/' + songID + '/file'
+	xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER).play(url, li)
 
 def getArtistAlbums(artist):
 	apiRequest = json.load(urllib2.urlopen(protocol + ip_address + ':' + port + '/album/query/albumartist:' + urllib.pathname2url(artist)))
@@ -303,5 +320,7 @@ elif (int(args.get('view', None)[0]) == ARTIST_SONGS):
 	presentData(getArtistSongs(str(args.get('artist', None)[0])))
 elif (int(args.get('view', None)[0]) == SONGS):
 	presentData(getAllSongs())
+elif (int(args.get('view', None)[0]) == PLAY_SONG):
+	playSong(str(args.get('song_id', None)[0]))
 else:
 	printdbg('Invalid view argument. Arguments: ' + str(args))
