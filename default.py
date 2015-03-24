@@ -69,7 +69,9 @@ def trackTitleComparator():
 	return compare_two_dicts
 
 def getMetaDataListItem(song):
-	metaDataDict = {'title': song['title']}
+	metaDataDict = {}
+	if (song['title'] != None):
+		metaDataDict = {'title': str(song['title'].encode('UTF-8'))}
 	if (song['artist'] != None):
 		metaDataDict['artist'] = str(song['artist'].encode('UTF-8'))
 	if (song['album'] != None):
@@ -121,7 +123,9 @@ def getAlbumArt(album):
 def presentData(data):
 	if (data[0] == ARTISTS):
 		for element in data[1]:
-			li = xbmcgui.ListItem(element, iconImage='DefaultAudio.png')
+			#li = xbmcgui.ListItem(element, iconImage='DefaultAudio.png')
+			li = xbmcgui.ListItem(element)
+			li.setInfo('music', {'artist': element})
 			url = 'plugin://' + plugin + '?view=' + str(ARTIST_ALBUMS) + '&artist=' + urllib.pathname2url(element)
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	elif (data[0] == ALBUMS):
@@ -147,6 +151,7 @@ def presentData(data):
 			albumID = element[1]
 			albumArt = getAlbumArt(albumID)
 			li = xbmcgui.ListItem(element[0], iconImage=albumArt)
+			li.setInfo('music', {'artist': element[3]})
 			url = 'plugin://' + plugin + '?view=' + str(ALBUM_SONGS) + '&album_id=' + str(albumID)
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 		li = xbmcgui.ListItem('All songs by ' + args.get('artist', None)[0], iconImage='DefaultAudio.png')
@@ -237,7 +242,8 @@ def getArtistAlbums(artist):
 				album = result[number].get('album').encode('UTF-8')
 				album_id = result[number].get('id')
 				album_year = result[number].get('year')
-				albums.append([album, album_id, album_year])
+				album_artist = albumArtist
+				albums.append([album, album_id, album_year, album_artist])
 	albums.sort()
 	return ARTIST_ALBUMS, albums
 	
