@@ -77,31 +77,7 @@ Configure the add-on using the Kodi user interface:
 
 ###**_Important!_**
 
-We [haven't](http://forum.kodi.tv/showthread.php?tid=218576) been able to get things working with PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin will at the moment not work without switching the default audio player to DVDPlayer. This is easy to do. Just add the following as a setting in the audio tag of your ``<userdata>/advancedsettings.xml``:
-
-	  <defaultplayer>dvdplayer</defaultplayer>
-
-If you don't have a ``advancedsettings.xml`` you can create one containing the following:
-
-	<advancedsettings>
-    	<audio>
-	  		<defaultplayer>dvdplayer</defaultplayer>
-		</audio>
-	</advancedsettings>
-	
-This will set the default audio player to DVDPlayer and allow you to stream FLAC (among other supported formats) with metadata.
-
-The userdata directory is located in different places depending on your platform.
-
-| OS       | Path								 	|
-|----------|----------------------------------------------------------------------------|
-| Linux    | ``~/.kodi/userdata/`` 						 	|
-| OS X     | ``/Users/<your_user_name>/Library/Application Support/kodi/userdata/`` 	|
-| Windows  | ``%APPDATA%\kodi\userdata`` 					 	|
-| OpenELEC | ``/storage/.kodi/userdata/`` 					 	|
-
-More information regarding [userdata](http://kodi.wiki/view/Userdata) and [advancedsettings.xml](http://kodi.wiki/view/Advancedsettings.xml).
-
+We [haven't](http://forum.kodi.tv/showthread.php?tid=218576) been able to get things working with PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin uses the DVDPlayer which does not have the curl buffer issues that we have been experiencing.
 *Note that the directories listed in this README are bound to change. Check yourself before you wreck yourself.*
 
 ## Authors
