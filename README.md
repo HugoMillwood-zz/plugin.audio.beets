@@ -78,6 +78,7 @@ Configure the add-on using the Kodi user interface:
 ###**_Important!_**
 
 We [haven't](http://forum.kodi.tv/showthread.php?tid=218576) been able to get things working with PAPlayer (the default audio player in Kodi) with streaming FLAC. This plugin uses the DVDPlayer which does not have the curl buffer issues that we have been experiencing.
+
 *Note that the directories listed in this README are bound to change. Check yourself before you wreck yourself.*
 
 ## Authors
